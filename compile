@@ -1,0 +1,2 @@
+#!/bin/bash 
+pandoc index.md -o report.pdf
