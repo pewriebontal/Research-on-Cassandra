@@ -1,10 +1,14 @@
 ---
 title: Cassandra
 subtitle: A Decentralized Powerhouse for Scalable Structured Storage
-author: Min Thu Khaing (MinThuKhaing@uon.edu.au)
+author:
+  - name: Min Thu Khaing
+    affiliation: "University of Newcastle, Australia"
+    email: "MinThuKhaing@uon.edu.au"
 date: Aug 1, 2024
 subject: Research Report on Apache Cassandra
-abstract: The ever-growing volume of data in today’s world necessitates robust and scalable database solutions. Relational databases, while effective for structured data, struggle with the high availability, performance, and fault tolerance demands of modern applications. This report explores Apache Cassandra, a highly scalable, distributed, NoSQL database specifically designed for handling massive datasets across multiple commodity servers. It provides high availability with no single point of failure, making it suitable for mission-critical applications. This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
+abstract: |
+  The ever-growing volume of data in today’s world necessitates robust and scalable database solutions. Relational databases, while effective for structured data, struggle with the high availability, performance, and fault tolerance demands of modern applications. This report explores Apache Cassandra, a highly scalable, distributed, NoSQL database specifically designed for handling massive datasets across multiple commodity servers. It provides high availability with no single point of failure, making it suitable for mission-critical applications. This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
 keywords:
   [
     Cassandra,
@@ -32,8 +36,11 @@ keywords:
     Facebook,
     Min Thu Khaing,
     University of Newcastle,
+    Mr. Boombastic a.k.a. Big B,
+    Neovim,
   ]
-geometry: a4paper,margin=2cm
+documentclass: "article"
+geometry: margin=1in,a4paper
 ---
 
 # Introduction
@@ -44,9 +51,9 @@ As a free and open-source, distributed, wide-column store NoSQL database managem
 
 This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
 
-# Background and Development
+## Background and Development
 
-Cassandra was originally developed at Facebook to power the Inbox Search feature, which needed to handle high write throughput and provide efficient search capabilities across geographically distributed data centers. Launched in June 2008 for around 100 million users, Cassandra now supports over 250 million users and serves as the backend storage system for multiple services within Facebook.
+Cassandra was originally developed at Facebook by Avinash Lakshman, one of the authors of Amazon's Dynamo, and Prashant Malik to power the Facebook inbox search feature, which needed to handle high write throughput and provide efficient search capabilities across geographically distributed data centers. Launched in June 2008 for around 100 million users, Cassandra now serves as the backend storage system for multiple services within Facebook. Facebook released Cassandra as an open-source project on Google Code in July 2008. In March 2009, it became an Apache Incubator project, and on February 17, 2010, it graduated to a top-level project. Facebook developers named their database after the Trojan mythological prophet Cassandra, with classical allusions to a curse on an oracle.
 
 # Data Model and Features
 
@@ -54,125 +61,153 @@ Apache Cassandra employs a wide-column store data model, which allows for flexib
 
 The primary components of Cassandra’s data model include:
 
-- **Keyspace**: The outermost container for data, similar to a database in relational systems.
-- **Table**: Contains rows and columns, where each row is identified by a unique key.
-- **Column Family**: A collection of rows that share the same structure, allowing for dynamic
-  columns.
+- **Keyspaces**: At the highest level, keyspaces are data containers in Cassandra, similar to schemas in relational databases. A keyspace typically contains multiple tables.
+- **Table**: Also known as column families in earlier versions, tables are defined within keyspaces. Tables store data as rows, each identified by a unique primary key, and contain a set of columns.
+- **Columns**: These define the data structure within a table, with various types such as Boolean, double, integer, and text.
+
+![Cassandra Data Model](./images/data-model.jpg){ width=240px }
 
 ## Key Features
 
-1. **Scalability**: Cassandra is designed to scale horizontally, handling large volumes of data
-   across many commodity servers without a single point of failure. Users can add more nodes
-   to the cluster without downtime.
-2. **High Availability**: Its decentralized architecture ensures high availability and resilience,
-   with data automatically replicated across multiple nodes. Cassandra can handle node failures
-   gracefully with no single point of failure.
-3. **Fault Tolerance**: Data is replicated across multiple nodes, ensuring that the system remains
-   operational even if some nodes fail.
-4. **Decentralized Architecture**: Cassandra uses a peer-to-peer protocol to communicate
+1. **Decentralized Architecture**: Cassandra uses a peer-to-peer protocol to communicate
    across nodes, ensuring no master node exists, and every node in the cluster is equal.
-5. **Tunable Consistency**: Users can configure consistency levels per operation, balancing
+2. **High Availability**: Its decentralized architecture ensures high availability and
+   resilience, with data automatically replicated across multiple nodes. Cassandra can handle
+   node failures gracefully with no single point of failure.
+3. **Linear Scalability**: Cassandra is designed for linear scalability, meaning that
+   performance increases linearly as new nodes are added to the cluster. This feature allows
+   the system to handle growing amounts of data and traffic without compromising performance.
+4. **Tunable Consistency**: Users can configure consistency levels per operation, balancing
    strong consistency and eventual consistency based on their requirements.
-6. **Flexible Schema**: The schema can be modified without downtime, allowing for rapid
-   development and iteration.
 
 # Justification for Development
 
-Apache Cassandra was developed to address the limitations of relational databases, particularly in handling large-scale, distributed data. Traditional relational databases struggle with horizontal scaling and often require costly, complex configurations to achieve high availability. In contrast, Cassandra offers a more straightforward, cost-effective solution.
+Apache Cassandra was developed to address the limitations of relational databases in handling big data workloads. Traditional RDBMSs struggle with scalability, flexibility, and performance when faced with large volumes of unstructured data. Cassandra offers several advantages that make it a superior choice for big data applications:
 
-## Advantages over Relational Databases
+## Advantages Over Traditional RDBMSs
 
-- **Scalability**: Cassandra’s ability to scale horizontally means adding more nodes to the cluster
-  increases its capacity and performance linearly.
-- **Performance**: Optimized for write-heavy workloads, Cassandra efficiently manages large
-  volumes of data with minimal latency, making it suitable for applications like logging and
-  real-time analytics.
-- **High Write Throughput**: Designed for high write-intensive workloads, Cassandra can
-  handle large volumes of data with minimal latency.
-- **Tunable Consistency**: The flexibility to choose consistency levels for different operations
-  provides a balance between performance and data integrity.
-- **Distributed Architecture**: Its masterless architecture allows for easy data distribution
-  across multiple data centers, enhancing performance and availability.
-- **Support for Big Data**: Cassandra can handle large datasets efficiently, making it ideal for
-  big data applications.
+1. Efficient Handling of Large Volumes of Unstructured Data
+
+   - Cassandra's column-based data model allows for efficient storage and retrieval of unstructured data, which is often encountered in big data applications.
+
+2. Extremely High Write Throughput
+
+   - Cassandra is optimized for high write throughput, making it suitable for applications that require frequent and rapid data ingestion.
+
+3. Flexible Schema
+
+   - Cassandra's schema-less design allows for easy modifications and additions to the data model, accommodating evolving application requirements without downtime.
 
 ## Limitations
 
-- **Eventual Consistency**: While tunable, Cassandra’s default eventual consistency model
-  may not suit applications requiring strict consistency.
-- **Complex Querying**: Compared to SQL databases, Cassandra lacks advanced querying
-  capabilities, such as joins and subqueries, making it less suitable for complex analytics.
-- **Complexity**: The learning curve for Cassandra can be steep, especially for those familiar
-  with relational databases.
+While Cassandra provides significant benefits, it also has some limitations:
+
+1.  Lack of ACID Transactions
+
+    - Cassandra does not support traditional ACID (Atomicity, Consistency, Isolation, Durability) transactions, which can be essential for applications that require strict data consistency, such as financial systems.
+
+2.  Limited Support for Complex Queries
+
+    - Cassandra's query capabilities, while powerful for many use cases, are not as advanced as SQL databases when it comes to complex joins and aggregations.
 
 ## Application Areas
 
-- **Real-time Big Data Applications**: Cassandra excels in environments where real-time
-  data processing is crucial, such as fraud detection systems and recommendation engines.
-- **IoT**: Its ability to handle high write throughput and large volumes of time-series data makes
-  Cassandra ideal for IoT applications.
-- **Social Media**: Platforms like Instagram and Facebook use Cassandra to manage large
-  volumes of user data and interactions efficiently.
+Despite these limitations, Cassandra excels in various application areas, including:
 
-## Storage Architecture
+1. Real-time Big Data Applications
+
+   - Cassandra excels in environments where real-time data processing is crucial, such as fraud detection systems and recommendation engines. Its low-latency data access and high throughput ensure timely and accurate responses, critical for these applications.
+
+2. Time Series Data Management
+
+   - Cassandra's efficient handling of time-series data makes it a preferred choice for applications such as monitoring, logging, and IoT data management. The ability to store and query time-series data efficiently is essential for these use cases.
+
+3. Internet of Things (IoT)
+
+   - Its ability to handle high write throughput and large volumes of time-series data makes Cassandra ideal for IoT applications. It can manage the constant influx of data from various sensors and devices, ensuring seamless data ingestion and analysis.
+
+4. Social Media Platforms
+
+   - Platforms like Instagram and Facebook use Cassandra to manage large volumes of user data and interactions efficiently. Cassandra's scalability and high availability are crucial for maintaining performance and user experience on these platforms.
+
+5. Online Web Retail and High-velocity E-commerce Systems
+
+   - Cassandra's high availability and fault tolerance ensure that e-commerce platforms can provide continuous service and handle large volumes of transactions smoothly. The flexible schema allows for quick adaptation to new business requirements and data models.
+
+6. Social Media Input and Analysis
+
+   - The need to store and analyze vast amounts of social media data in real-time aligns well with Cassandra's strengths in scalability and write performance. This is essential for providing personalized user experiences and real-time insights.
+
+# Storage Architecture
 
 Cassandra’s storage architecture is built on a distributed, partitioned row store model, designed for high performance and scalability. Data is partitioned across the cluster using consistent hashing, ensuring even distribution and efficient data retrieval. Each partition is a collection of rows, with each row containing columns identified by a unique key. The system uses a log-structured merge-tree (LSM tree) for efficient write operations, where data is written to a memory table (Memtable) and periodically flushed to disk as SSTables (Sorted String Tables).
 
-## Scalability
+# Scalability
 
 Cassandra supports horizontal scalability through data partitioning and replication. Adding more nodes to the cluster seamlessly increases its capacity and ensures load balancing. This capability enables the database to handle increased loads without compromising performance. Data is replicated across multiple nodes to provide fault tolerance and high availability.
 
-## Query Capabilities
+![Netflix Benchmark](./images/netflix.jpg){ width=240px }
+
+A notable example of Cassandra's scalability is Netflix's benchmark, which demonstrated the ability to handle 1.1 million writes per second across a 288-node cluster, with linear performance increases as nodes were added.
+
+# Query Capabilities
 
 Cassandra uses the Cassandra Query Language (CQL), which resembles SQL but is tailored for its column-based model. CQL allows users to perform CRUD operations (Create, Read, Update, Delete) and supports secondary indexes and materialized views for efficient querying. Concurrency Control Features Cassandra employs an eventual consistency model, allowing for high availability and partition tolerance. It uses tunable consistency, enabling developers to choose the level of consistency required for their applications, ranging from eventual to strong consistency. This flexibility lets users prioritize performance or consistency based on their application needs.
 
-## Fault Tolerance
+# Concurrency Control
+
+Cassandra uses an eventual consistency model, often referred to as BASE (Basically Available, Soft state, Eventual consistency), in contrast to the ACID model of traditional databases. Key aspects include:
+
+- Tunable consistency levels, allowing developers to balance between consistency and availability
+- Per-operation consistency settings, enabling fine-grained control
+- Support for lightweight transactions for operations requiring linearizability
+
+While this model sacrifices some consistency guarantees, it allows Cassandra to achieve high availability and partition tolerance, crucial for distributed systems.
+
+# Fault Tolerance
 
 Cassandra ensures fault tolerance through data replication. Each piece of data is replicated across multiple nodes, ensuring that the system can automatically handle node failures without data loss. Features like hinted handoff and repair mechanisms help maintain data consistency and availability.
 
+![Cassandra's Replication Mechanism](./images/data_replication.jpg){ width=240px }
+
 # Demo of Basic CRUD Operations
 
-## 1. Create
+To demonstrate Cassandra's capabilities, we can perform basic CRUD (Create, Read, Update, Delete) operations:
 
-Inserting data into Cassandra involves defining a table and adding rows. For example:
+## 1. Create a keyspace and table:
 
 ```sql
-CREATE TABLE users (
-user_id UUID PRIMARY KEY,
-name TEXT,
-email TEXT,
-created_at TIMESTAMP
-);
+CREATE KEYSPACE example_ks WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
+USE example_ks;
+CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 
 ```
 
-```sql
-INSERT INTO users (user_id, name, email) VALUES (1, 'Min Thu Khaing', '0x@bontal.net');
-```
-
-## 2. Read
-
-Querying data is straightforward with CQL. For example:
+## 2. Insert data (Create):
 
 ```sql
-SELECT * FROM users WHERE user_id = 1;
+INSERT INTO users (id, name, email) VALUES (uuid(), 'John Doe', 'john@example.com');
 ```
 
-## 3. Update
-
-Updating existing data is done using the UPDATE statement:
+## 3. Query data (Read):
 
 ```sql
-UPDATE users SET email = 'MinThuKhaing@uon.edu.au' WHERE user_id = 1;
+SELECT * FROM users WHERE id = <uuid_value>;
 ```
 
-## 4. Delete
-
-Deleting data is similarly simple:
+## 3. Modify existing data (Update):
 
 ```sql
-DELETE FROM users WHERE user_id = 1;
+UPDATE users SET email = 'johndoe@example.com' WHERE id = <uuid_value>;
 ```
+
+## 4. Remove data (Delete):
+
+```sql
+DELETE FROM users WHERE id = <uuid_value>;
+```
+
+These operations showcase Cassandra's ability to handle basic data management tasks efficiently.
 
 # Conclusion
 
@@ -184,5 +219,22 @@ Despite these challenges, Cassandra’s strengths in handling large-scale data w
 
 # References
 
-    Apache Cassandra Documentation. Apache Cassandra
-    Apache Cassandra - Wikipedia. Wikipedia
+Apache Cassandra Documentation. Apache Cassandra
+
+Apache Cassandra - Wikipedia. Wikipedia
+
+DataStax Corporation. (2013). Introduction to Apache Cassandra. Retrieved from https://www.odbms.org/wp-content/uploads/2014/06/WP-IntroToCassandra.pdf
+
+LAKSHMAN, A., & MALIK, P. (2010). Cassandra - A Decentralized Structured Storage System. Operating Systems Review, 44(2), 35–40. https://doi.org/10.1145/1773912.1773922
+
+Lars, G. (2011). HBase: the definitive guide : [random access to your planet-size data]. O’Reilly.
+
+Cockcroft, A., & Sheahan, D. (2011, November 2). Benchmarking Cassandra scalability on AWS — Over a million writes per second. Netflix Technology Blog. Retrieved from https://netflixtechblog.com/benchmarking-cassandra-scalability-on-aws-over-a-million-writes-per-second-39f45f066c9e
+
+Hamilton, J. (2008, July 12). Facebook releases Cassandra as open source. Retrieved June 4, 2009, from http://perspectives.mvdirona.com/2008/07/12/FacebookReleasesCassandraAsOpenSource.aspx
+
+Is this the new hotness now? (2009, March 2). Mail-archive.com. Archived from the original on April 25, 2010. Retrieved March 29, 2010, from http://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg00004.html
+
+Cassandra is an Apache top level project. (2010, February 18). Mail-archive.com. Archived from the original on March 28, 2010. Retrieved March 29, 2010, from http://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg01518.html
+
+The meaning behind the name of Apache Cassandra. (n.d.). Archived from the original on November 1, 2016. Retrieved July 19, 2016, from https://web.archive.org/web/20161101091045/http://kellabyte.com/2013/01/04/the-meaning-behind-the-name-of-apache-cassandra
