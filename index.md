@@ -1,9 +1,9 @@
 ---
 title: Cassandra
-subtitle: A Decentralized Powerhouse for Scalable Structured Storage
+subtitle: A Decentralized Powerhouse for Managing Planet-Sized Structured Data
 author:
   - name: Min Thu Khaing
-    affiliation: "University of Newcastle, Australia"
+    affiliation: "The University of Newcastle, Australia"
     email: "MinThuKhaing@uon.edu.au"
 date: Aug 1, 2024
 subject: Research Report on Apache Cassandra
