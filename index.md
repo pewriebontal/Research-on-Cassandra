@@ -1,5 +1,5 @@
 ---
-title: Cassandra
+title: \textbf{Cassandra}
 subtitle: A Decentralized Powerhouse for Managing Planet-Sized Structured Data
 author:
   - name: Min Thu Khaing
@@ -186,7 +186,7 @@ CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 ## 2. Insert data (Create):
 
 ```sql
-INSERT INTO users (id, name, email) VALUES (uuid(), 'John Doe', 'john@example.com');
+INSERT INTO users (id, name, email) VALUES (uuid(), 'Lee Yiyuan', 'leeyiyuan@urmom.house');
 ```
 
 ## 3. Query data (Read):
@@ -198,7 +198,7 @@ SELECT * FROM users WHERE id = <uuid_value>;
 ## 3. Modify existing data (Update):
 
 ```sql
-UPDATE users SET email = 'johndoe@example.com' WHERE id = <uuid_value>;
+UPDATE users SET email = 'leeyiyuan@bon.house' WHERE id = <uuid_value>;
 ```
 
 ## 4. Remove data (Delete):
