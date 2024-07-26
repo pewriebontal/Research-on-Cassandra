@@ -5,7 +5,7 @@ author:
   - name: Min Thu Khaing
     affiliation: "The University of Newcastle, Australia"
     email: "MinThuKhaing@uon.edu.au"
-date: Aug 1, 2024
+date: \today
 subject: Research Report on Apache Cassandra
 abstract: |
   The ever-growing volume of data in today’s world necessitates robust and scalable database solutions. Relational databases, while effective for structured data, struggle with the high availability, performance, and fault tolerance demands of modern applications. This report explores Apache Cassandra, a highly scalable, distributed, NoSQL database specifically designed for handling massive datasets across multiple commodity servers. It provides high availability with no single point of failure, making it suitable for mission-critical applications. This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
@@ -59,13 +59,13 @@ Cassandra was originally developed at Facebook by Avinash Lakshman, one of the a
 
 Apache Cassandra employs a wide-column store data model, which allows for flexible schema definitions, significantly different from the row-based approach of relational databases. In Cassandra, data is stored in column families, similar to tables in relational databases but more flexible. Each row in a column family can have a different number of columns, making it suitable for handling sparse datasets.
 
+![Cassandra Data Model](./images/data-model.jpg){ width=240px }
+
 The primary components of Cassandra’s data model include:
 
 - **Keyspaces**: At the highest level, keyspaces are data containers in Cassandra, similar to schemas in relational databases. A keyspace typically contains multiple tables.
 - **Table**: Also known as column families in earlier versions, tables are defined within keyspaces. Tables store data as rows, each identified by a unique primary key, and contain a set of columns.
 - **Columns**: These define the data structure within a table, with various types such as Boolean, double, integer, and text.
-
-![Cassandra Data Model](./images/data-model.jpg){ width=240px }
 
 ## Key Features
 
@@ -140,15 +140,24 @@ Despite these limitations, Cassandra excels in various application areas, includ
 
 # Storage Architecture
 
-Cassandra’s storage architecture is built on a distributed, partitioned row store model, designed for high performance and scalability. Data is partitioned across the cluster using consistent hashing, ensuring even distribution and efficient data retrieval. Each partition is a collection of rows, with each row containing columns identified by a unique key. The system uses a log-structured merge-tree (LSM tree) for efficient write operations, where data is written to a memory table (Memtable) and periodically flushed to disk as SSTables (Sorted String Tables).
+Cassandra’s storage architecture is built on a distributed, partitioned row store model, designed for high performance and scalability. Key components of this architecture include:
 
-![Architecture of Cassandra](./images/cassandra_architecture.jpg){ width=350px }
+![Architecture of Cassandra](./images/cassandra_architecture.jpg){ width=300px }
+
+- **Ring Topology**: Nodes are arranged in a ring, ensuring even data distribution across the cluster.
+- **Partitioner**: Data is partitioned using consistent hashing, which ensures an even distribution and efficient data retrieval.
+- **Replication**: Data is replicated across multiple nodes to ensure reliability and fault tolerance.
+- **Commit Log**: This ensures the durability of write operations by recording changes before they are applied.
+- **Memtable**: An in-memory structure that stores recent writes. Data is initially written to the Memtable for quick access.
+- **SSTables** (Sorted String Tables): Immutable, on-disk structures where data from the Memtable is periodically flushed for long-term storage and persistence. SSTables enable efficient read operations.
+
+The system employs a log-structured merge-tree (LSM tree) to optimize write operations. Data is first written to the Memtable and then periodically flushed to disk as SSTables, ensuring both high write performance and data durability. Each partition in the storage model is a collection of rows, with each row containing columns identified by a unique key. This architecture allows Cassandra to handle large volumes of data while maintaining scalability and performance.
 
 # Scalability
 
 Cassandra supports horizontal scalability through data partitioning and replication. Adding more nodes to the cluster seamlessly increases its capacity and ensures load balancing. This capability enables the database to handle increased loads without compromising performance. Data is replicated across multiple nodes to provide fault tolerance and high availability.
 
-![Netflix Benchmark](./images/netflix.jpg){ width=350px }
+![Netflix Benchmark](./images/netflix.jpg){ width=300px }
 
 A notable example of Cassandra's scalability is Netflix's benchmark, which demonstrated the ability to handle 1.1 million writes per second across a 288-node cluster, with linear performance increases as nodes were added.
 
@@ -176,34 +185,38 @@ Cassandra ensures fault tolerance through data replication. Each piece of data i
 
 To demonstrate Cassandra's capabilities, we can perform basic CRUD (Create, Read, Update, Delete) operations:
 
-## 1. Create a keyspace and table:
+## Create a keyspace and table:
 
 ```sql
-CREATE KEYSPACE example_ks WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
+CREATE KEYSPACE example_ks WITH replication = {'class': 'SimpleStrategy',
+'replication_factor': 1};
+
 USE example_ks;
+
 CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 
 ```
 
-## 2. Insert data (Create):
+## Insert data (Create):
 
 ```sql
-INSERT INTO users (id, name, email) VALUES (uuid(), 'Lee Yiyuan', 'leeyiyuan@urmom.house');
+INSERT INTO users (id, name, email) VALUES (uuid(),
+'Mr. Boombastic a.k.a Big B', '0x@bontal.net');
 ```
 
-## 3. Query data (Read):
+## Query data (Read):
 
 ```sql
 SELECT * FROM users WHERE id = <uuid_value>;
 ```
 
-## 3. Modify existing data (Update):
+## Modify existing data (Update):
 
 ```sql
-UPDATE users SET email = 'leeyiyuan@bon.house' WHERE id = <uuid_value>;
+UPDATE users SET email = 'Mr305@bontal.net' WHERE id = <uuid_value>;
 ```
 
-## 4. Remove data (Delete):
+## Remove data (Delete):
 
 ```sql
 DELETE FROM users WHERE id = <uuid_value>;
@@ -221,9 +234,7 @@ Despite these challenges, Cassandra’s strengths in handling large-scale data w
 
 # References
 
-Apache Cassandra Documentation. Apache Cassandra
-
-Apache Cassandra - Wikipedia. Wikipedia
+Apache Cassandra Documentation. (n.d.). Apache Cassandra. Retrieved from https://cassandra.apache.org/doc/latest/
 
 DataStax Corporation. (2013). Introduction to Apache Cassandra. Retrieved from https://www.odbms.org/wp-content/uploads/2014/06/WP-IntroToCassandra.pdf
 
@@ -240,3 +251,5 @@ Is this the new hotness now? (2009, March 2). Mail-archive.com. Archived from th
 Cassandra is an Apache top level project. (2010, February 18). Mail-archive.com. Archived from the original on March 28, 2010. Retrieved March 29, 2010, from http://www.mail-archive.com/cassandra-dev@incubator.apache.org/msg01518.html
 
 The meaning behind the name of Apache Cassandra. (n.d.). Archived from the original on November 1, 2016. Retrieved July 19, 2016, from https://web.archive.org/web/20161101091045/http://kellabyte.com/2013/01/04/the-meaning-behind-the-name-of-apache-cassandra
+
+Byali, Ramesh. (2022). Cassandra is a Better Option for Handling Big Data in a No-SQL Database. 880-883.

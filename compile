@@ -1,2 +1,2 @@
 #!/bin/bash 
-pandoc index.md --highlight-style pygments --template=custom_template.tex -o report.pdf --toc
+pandoc index.md --highlight-style pygments --template=custom_template.tex -o report.pdf --toc --number-sections
