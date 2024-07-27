@@ -189,13 +189,27 @@ To demonstrate Cassandra's capabilities, we can perform basic CRUD (Create, Read
 
 ```sql
 CREATE KEYSPACE example_ks WITH replication = {'class': 'SimpleStrategy',
-'replication_factor': 1};
+'replication_factor': 3};
 
 USE example_ks;
 
 CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 
 ```
+
+**Breakdown of the Command:**
+
+1. _CREATE KEYSPACE example_ks:_
+
+- CREATE KEYSPACE: Specifies creating a new keyspace.
+- example_ks: Name of the keyspace.
+
+2. - WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3}:\*
+
+- WITH replication: Defines the replication strategy.
+- {'class': 'SimpleStrategy', 'replication_factor': 3}:
+  - 'class': 'SimpleStrategy': Uses the SimpleStrategy, suitable for a single data center.
+  - 'replication_factor': 3: Each piece of data is stored on three different nodes.
 
 ## Insert data (Create):
 
