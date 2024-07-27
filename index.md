@@ -8,7 +8,7 @@ author:
 date: \today
 subject: Research Report on Apache Cassandra
 abstract: |
-  The ever-growing volume of data in today’s world necessitates robust and scalable database solutions. Relational databases, while effective for structured data, struggle with the high availability, performance, and fault tolerance demands of modern applications. This report explores Apache Cassandra, a highly scalable, distributed, NoSQL database specifically designed for handling massive datasets across multiple commodity servers. It provides high availability with no single point of failure, making it suitable for mission-critical applications. This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
+  The ever-growing volume of data in today’s world necessitates robust and scalable database solutions. Relational databases, while effective for structured data, struggle with the high availability, performance, and fault tolerance demands of modern applications. This report examines Apache Cassandra, a highly scalable, distributed, NoSQL database specifically designed for handling massive datasets across multiple commodity servers. It provides high availability with no single point of failure, making it suitable for mission-critical applications. This report explores the data model, features, advantages, limitations, and operational capabilities of Cassandra, along with a demonstration of basic CRUD operations.
 keywords:
   [
     Cassandra,
