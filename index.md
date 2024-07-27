@@ -140,18 +140,73 @@ Despite these limitations, Cassandra excels in various application areas, includ
 
 # Storage Architecture
 
-Cassandra’s storage architecture is built on a distributed, partitioned row store model, designed for high performance and scalability. Key components of this architecture include:
+Cassandra's storage architecture is designed to ensure high performance, scalability, and fault tolerance. It consists of several key components:
+
+## Ring Topology
+
+Nodes in a Cassandra cluster are arranged in a ring. This ensures even distribution of data across the cluster. Each node in the ring is responsible for a portion of the data, which is determined by a hash function.
+
+## Partitioner
+
+The partitioner distributes data across nodes using consistent hashing. This ensures an even distribution and efficient retrieval of data. Each piece of data is assigned a token, and the partitioner maps these tokens to nodes.
+
+![Distributing data on the Consistent Hashing ring](./images/partitioner.jpg){ width=500px }
+
+## Replication
+
+Cassandra provides high availability and fault tolerance through data replication. Data is replicated across multiple nodes. The replication factor determines the number of replicas for each piece of data, ensuring that it remains accessible even if some nodes fail.
+
+![Simple replication with 3 replicas](./images/replication.jpg){ width=400px }
+
+## SSTables (Sorted String Tables)
+
+SSTables are immutable, on-disk data structures. Data from the Memtable is periodically flushed to SSTables, ensuring long-term storage. SSTables are written sequentially and never modified, which makes write operations efficient and read operations fast.
+
+## Log-Structured Merge-Tree (LSM Tree)
+
+Cassandra uses a log-structured merge-tree (LSM tree) to optimize write operations. Data is first written to the Memtable and then periodically flushed to disk as SSTables. This structure helps maintain high write performance and ensures data durability. Each partition is a collection of rows, and each row contains columns identified by a unique key. This allows Cassandra to handle large volumes of data while maintaining scalability and performance.
+
+## Commit Log
+
+The commit log is an append-only log that records all write operations. This ensures the durability of write operations by recording changes before they are applied. If a node fails, the commit log can be used to recover any data not yet written to SSTables.
+
+![Commit Log](./images/commit_log.jpg){ width=400px }
+
+## Memtable
+
+The Memtable is an in-memory data structure that stores recent writes. When data is written to Cassandra, it is first stored in the Memtable for quick access. Periodically, the Memtable is flushed to disk to create SSTables.
+
+![Storing data to commit log and MemTable](./images/memtable.jpg){ width=400px }
+
+## Compaction
+
+Compaction merges SSTables, consolidates data, removes deleted data (tombstones), and optimizes read performance. It reduces the number of SSTables that need to be checked during read operations, improving efficiency.
+
+![Compaction: Merge data based on partition key](./images/compaction.jpg){ width=300px }
+
+## Caching
+
+Cassandra supports various caching mechanisms to enhance read performance. The key cache stores the locations of data on disk, while the row cache stores entire rows. These caches help reduce disk I/O and improve read speeds.
+
+## Hinted Handoff and Repair
+
+Hinted handoff and repair mechanisms maintain data consistency and availability. When a node is down, hinted handoff temporarily stores data intended for the downed node on a live node. Once the downed node is back online, the stored data is sent to it. Repair processes ensure that all replicas of data remain consistent over time.
+
+![Hinted Handoff](./images/hinted_handoff.jpg){ width=400px }
+
+## Bloom Filters and Indexes
+
+Cassandra uses Bloom filters to quickly check the existence of rows in SSTables. These probabilistic data structures help avoid unnecessary disk I/O by indicating whether a row might exist in an SSTable. Additionally, Cassandra maintains indexes to speed up data retrieval.
+
+## Tombstones
+
+When data is deleted, a tombstone marker is placed on it rather than immediately removing it. This marker indicates that the data is deleted and will be removed during the next compaction process. Tombstones ensure deletions are propagated to all replicas.
+
+## Summary
 
 ![Architecture of Cassandra](./images/cassandra_architecture.jpg){ width=300px }
 
-- **Ring Topology**: Nodes are arranged in a ring, ensuring even data distribution across the cluster.
-- **Partitioner**: Data is partitioned using consistent hashing, which ensures an even distribution and efficient data retrieval.
-- **Replication**: Data is replicated across multiple nodes to ensure reliability and fault tolerance.
-- **Commit Log**: This ensures the durability of write operations by recording changes before they are applied.
-- **Memtable**: An in-memory structure that stores recent writes. Data is initially written to the Memtable for quick access.
-- **SSTables** (Sorted String Tables): Immutable, on-disk structures where data from the Memtable is periodically flushed for long-term storage and persistence. SSTables enable efficient read operations.
-
-The system employs a log-structured merge-tree (LSM tree) to optimize write operations. Data is first written to the Memtable and then periodically flushed to disk as SSTables, ensuring both high write performance and data durability. Each partition in the storage model is a collection of rows, with each row containing columns identified by a unique key. This architecture allows Cassandra to handle large volumes of data while maintaining scalability and performance.
+Cassandra's storage architecture ensures high performance, scalability, and fault tolerance by distributing data evenly, replicating it for availability, and using efficient data structures for fast read and write operations.
 
 # Scalability
 
@@ -267,3 +322,5 @@ Cassandra is an Apache top level project. (2010, February 18). Mail-archive.com.
 The meaning behind the name of Apache Cassandra. (n.d.). Archived from the original on November 1, 2016. Retrieved July 19, 2016, from https://web.archive.org/web/20161101091045/http://kellabyte.com/2013/01/04/the-meaning-behind-the-name-of-apache-cassandra
 
 Byali, Ramesh. (2022). Cassandra is a Better Option for Handling Big Data in a No-SQL Database. 880-883.
+
+Agrawal, A. (2024, May 28). Cassandra: Introduction. Medium. https://medium.com/@apurvaagrawal_95485/cassandra-introduction-40f95d2f40dd
