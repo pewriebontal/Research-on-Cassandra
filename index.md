@@ -244,13 +244,15 @@ To demonstrate Cassandra's capabilities, we can perform basic CRUD (Create, Read
 
 ```sql
 CREATE KEYSPACE example_ks WITH replication = {'class': 'SimpleStrategy',
-'replication_factor': 3};
+'replication_factor': 1};
 
 USE example_ks;
 
 CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 
 ```
+
+![Performing Keyspace Creation](./images/step1.jpg)
 
 **Breakdown of the Command:**
 
@@ -259,12 +261,12 @@ CREATE TABLE users (id UUID PRIMARY KEY, name TEXT, email TEXT);
 - CREATE KEYSPACE: Specifies creating a new keyspace.
 - example_ks: Name of the keyspace.
 
-2. - WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3}:\*
+2. _WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1}:_
 
 - WITH replication: Defines the replication strategy.
-- {'class': 'SimpleStrategy', 'replication_factor': 3}:
+- {'class': 'SimpleStrategy', 'replication_factor': 1}:
   - 'class': 'SimpleStrategy': Uses the SimpleStrategy, suitable for a single data center.
-  - 'replication_factor': 3: Each piece of data is stored on three different nodes.
+  - 'replication_factor': 1: This value specifies that each piece of data will have only one replica. In other words, there is no redundancy, and the data is stored on a single node.
 
 ## Insert data (Create):
 
@@ -273,11 +275,15 @@ INSERT INTO users (id, name, email) VALUES (uuid(),
 'Mr. Boombastic a.k.a Big B', '0x@bontal.net');
 ```
 
+![Performing Data Insertion](./images/step2.jpg)
+
 ## Query data (Read):
 
 ```sql
 SELECT * FROM users WHERE id = <uuid_value>;
 ```
+
+![Reading Data](./images/step3.jpg)
 
 ## Modify existing data (Update):
 
@@ -285,11 +291,15 @@ SELECT * FROM users WHERE id = <uuid_value>;
 UPDATE users SET email = 'Mr305@bontal.net' WHERE id = <uuid_value>;
 ```
 
+![Data Modification](./images/step4.jpg)
+
 ## Remove data (Delete):
 
 ```sql
 DELETE FROM users WHERE id = <uuid_value>;
 ```
+
+![Data Deletion](./images/step5.jpg)
 
 These operations showcase Cassandra's ability to handle basic data management tasks efficiently.
 
