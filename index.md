@@ -210,7 +210,24 @@ Cassandra's storage architecture ensures high performance, scalability, and faul
 
 # Scalability
 
-Cassandra supports horizontal scalability through data partitioning and replication. Adding more nodes to the cluster seamlessly increases its capacity and ensures load balancing. This capability enables the database to handle increased loads without compromising performance. Data is replicated across multiple nodes to provide fault tolerance and high availability.
+Cassandra is fundamentally designed to scale horizontally, meaning that it is optimized for adding more nodes to a cluster rather than upgrading existing nodes. This design choice allows for:
+
+- **Distributed Architecture**: Data is distributed across multiple nodes, which enhances fault tolerance and load balancing.
+- **Scalability**: Adding nodes can increase capacity and performance without the limitations of individual node resources.
+
+## Understanding Vertical Scaling
+
+Vertical scaling in Cassandra is primarily focused on improving the performance of individual nodes rather than adding more nodes to the cluster. This can be achieved by:
+
+- **Increasing RAM**: More memory allows for better caching of data, which can significantly improve read performance.
+- **Upgrading CPUs**: Faster processors can handle more requests and perform operations more quickly.
+- **Enhancing Storage**: Using faster storage solutions (like SSDs) can reduce latency and improve data access speeds.
+
+While vertical scaling can be attempted in Cassandra, it is not the recommended or supported method due to the system’s design for horizontal scaling. Users may find limited documentation and community support for vertical scaling, leading to the perception that “there is no” standard procedure. For optimal performance and scalability, it is advisable to consider horizontal scaling strategies, which align with Cassandra’s architecture.
+
+## Horizontal Scaling in Cassandra
+
+Cassandra supports horizontal scalability through data partitioning and replication. Adding more nodes to the cluster seamlessly increases its capacity and ensures effective load balancing. This capability enables the database to handle increased loads without compromising performance. Data is replicated across multiple nodes to provide fault tolerance and high availability.
 
 ![Netflix Benchmark](./images/netflix.jpg){ width=300px }
 
@@ -334,3 +351,7 @@ The meaning behind the name of Apache Cassandra. (n.d.). Archived from the origi
 Byali, Ramesh. (2022). Cassandra is a Better Option for Handling Big Data in a No-SQL Database. 880-883.
 
 Agrawal, A. (2024, May 28). Cassandra: Introduction. Medium. https://medium.com/@apurvaagrawal_95485/cassandra-introduction-40f95d2f40dd
+
+Datastax. (2021, Sep 21). Why does scalability matter and how does Cassandra scale? Retrieved from https://www.datastax.com/blog/why-does-scalability-matter-and-how-does-cassandra-scale
+
+Piotrwest. (2015, September 4). What is the standard procedure to scale a Cassandra cluster vertically? Server Fault. Retrieved from https://serverfault.com/questions/720169/how-to-scale-cassandra-cluster-vertically
